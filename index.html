@@ -269,34 +269,79 @@
     .f-btn:hover { border-color:rgba(255,255,255,.2); color:var(--white); }
     .f-btn.on { background:var(--burg); border-color:var(--burg); color:#fff; }
 
-    /* DJ Grid */
-    .dj-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:14px; }
+    /* ── BENTO DJ GRID ─────────────────────────────────────────────── */
+    .dj-grid {
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      grid-auto-rows:auto;
+      gap:14px;
+    }
 
-    /* DJ Card */
+    /* DJ Card base */
     @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
     .dj-card {
       position:relative; border-radius:12px; overflow:hidden; cursor:pointer;
-      background:var(--card); aspect-ratio:3/4;
+      background:var(--card); min-height:300px;
+      border:1px solid var(--border);
       animation:fadeUp .4s ease backwards;
+      transition:border-color .3s, transform .3s;
     }
+    .dj-card:hover { border-color:rgba(152,60,67,.4); transform:translateY(-2px); }
+    .dj-card-wide { grid-column:span 2; min-height:380px; }
+
     .dj-photo { position:absolute; inset:0; }
-    .dj-photo img { width:100%; height:100%; object-fit:cover; transition:transform .5s ease; }
-    .dj-card:hover .dj-photo img { transform:scale(1.06); }
+    .dj-photo img { width:100%; height:100%; object-fit:cover; transition:transform .6s ease; }
+    .dj-card:hover .dj-photo img { transform:scale(1.05); }
     .dj-nophoto {
       position:absolute; inset:0;
       background:linear-gradient(135deg, var(--purp), var(--card));
       display:flex; align-items:center; justify-content:center;
       font-size:80px; font-weight:900; color:rgba(255,255,255,.06);
     }
+
+    /* Gradient overlay */
     .dj-card::before {
       content:''; position:absolute; inset:0; z-index:1;
-      background:linear-gradient(to bottom, transparent 28%, rgba(0,0,0,.6) 55%, rgba(0,0,0,.95) 100%);
+      background:linear-gradient(to bottom, transparent 25%, rgba(0,0,0,.55) 55%, rgba(0,0,0,.94) 100%);
       transition:background .3s;
     }
     .dj-card:hover::before {
-      background:linear-gradient(to bottom, rgba(0,0,0,.12) 0%, rgba(0,0,0,.65) 48%, rgba(0,0,0,.97) 100%);
+      background:linear-gradient(to bottom, rgba(0,0,0,.1) 0%, rgba(0,0,0,.6) 46%, rgba(0,0,0,.97) 100%);
     }
-    .dj-content { position:absolute; bottom:0; left:0; right:0; padding:20px; z-index:2; }
+
+    /* ── EVERVAULT HOVER OVERLAY ─────────────────────────────────────── */
+    .ev-overlay {
+      position:absolute; inset:0; z-index:4; pointer-events:none;
+      opacity:0; transition:opacity .15s;
+    }
+    .dj-card:hover .ev-overlay { opacity:1; }
+    .ev-gradient {
+      position:absolute; inset:0;
+      background:linear-gradient(135deg, rgba(152,60,67,.85), rgba(61,26,74,.8));
+      -webkit-mask-image:radial-gradient(220px at 50% 50%, white, transparent);
+      mask-image:radial-gradient(220px at 50% 50%, white, transparent);
+    }
+    .ev-chars {
+      position:absolute; inset:0;
+      font-family:monospace; font-size:9px; font-weight:700;
+      color:#fff; line-height:1.4; word-break:break-all;
+      white-space:pre-wrap; padding:10px;
+      mix-blend-mode:overlay;
+      -webkit-mask-image:radial-gradient(220px at 50% 50%, white, transparent);
+      mask-image:radial-gradient(220px at 50% 50%, white, transparent);
+    }
+
+    /* Bento dot pattern on hover (like the bento-grid component) */
+    .dj-card::after {
+      content:''; position:absolute; inset:0; z-index:2; pointer-events:none;
+      background-image:radial-gradient(circle, rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size:4px 4px;
+      opacity:0; transition:opacity .3s;
+    }
+    .dj-card:hover::after { opacity:1; }
+
+    /* Card content */
+    .dj-content { position:absolute; bottom:0; left:0; right:0; padding:20px; z-index:5; }
     .dj-tags { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:10px; }
     .dj-tag {
       padding:3px 10px; border-radius:20px;
@@ -304,9 +349,10 @@
       color:var(--burg-l); font-size:9px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
     }
     .dj-name { font-size:24px; font-weight:900; letter-spacing:-.02em; line-height:1.05; }
+    .dj-card-wide .dj-name { font-size:32px; }
     .dj-role { font-size:11px; color:var(--muted); margin-top:3px; }
     .dj-bio {
-      font-size:12px; color:rgba(242,237,230,.7); line-height:1.55; margin-top:10px;
+      font-size:12px; color:rgba(242,237,230,.75); line-height:1.55; margin-top:10px;
       max-height:0; overflow:hidden; opacity:0;
       transition:max-height .35s ease, opacity .3s ease;
     }
@@ -326,11 +372,11 @@
     .dj-socials { display:flex; gap:7px; }
     .dj-soc {
       width:32px; height:32px; border-radius:7px;
-      background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.1);
+      background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.12);
       display:flex; align-items:center; justify-content:center;
       color:var(--white); text-decoration:none; transition:background .15s;
     }
-    .dj-soc:hover { background:rgba(255,255,255,.16); }
+    .dj-soc:hover { background:rgba(255,255,255,.2); }
     .dj-soc svg { width:14px; height:14px; }
     .btn-booking {
       padding:7px 14px; background:var(--burg); color:#fff; border:none; border-radius:7px;
@@ -339,12 +385,89 @@
     }
     .btn-booking:hover { background:var(--burg-l); }
     .on-air-badge {
-      position:absolute; top:14px; right:14px; z-index:3;
+      position:absolute; top:14px; right:14px; z-index:6;
       display:flex; align-items:center; gap:6px; padding:5px 11px; border-radius:20px;
       background:rgba(255,50,50,.14); backdrop-filter:blur(8px); border:1px solid rgba(255,50,50,.28);
       font-size:9px; font-weight:700; letter-spacing:.12em; color:#ff4444;
     }
     .on-air-dot { width:5px; height:5px; border-radius:50%; background:#ff4444; animation:blink 1.5s ease-in-out infinite; }
+
+    /* ── BACKGROUND BEAMS SECTION ─────────────────────────────────── */
+    .beams-section {
+      position:relative; overflow:hidden;
+      padding:100px 28px; background:var(--dark);
+      border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+    }
+    .beams-svg {
+      position:absolute; inset:0; width:100%; height:100%;
+      pointer-events:none; opacity:.5;
+    }
+    .beams-inner {
+      position:relative; z-index:2;
+      max-width:1000px; margin:0 auto;
+      display:grid; grid-template-columns:1fr 1fr; gap:24px;
+    }
+    .beam-card {
+      background:rgba(7,6,10,.7); backdrop-filter:blur(20px);
+      border:1px solid var(--border); border-radius:16px;
+      padding:40px 36px;
+    }
+    .beam-card-ey { font-size:10px; font-weight:700; letter-spacing:.22em; text-transform:uppercase; color:var(--burg); margin-bottom:14px; }
+    .beam-card-title {
+      font-size:clamp(26px,4vw,38px); font-weight:900; letter-spacing:-.03em; line-height:1;
+      background:linear-gradient(135deg, var(--white) 0%, rgba(242,237,230,.55) 100%);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text; margin-bottom:14px;
+    }
+    .beam-card-sub { font-size:13px; color:var(--muted); line-height:1.65; margin-bottom:28px; }
+    .beam-form { display:flex; flex-direction:column; gap:12px; }
+    .beam-input {
+      width:100%; background:rgba(255,255,255,.05); border:1px solid var(--border);
+      border-radius:8px; padding:11px 16px; color:var(--white);
+      font-family:var(--f); font-size:13px; outline:none; transition:border-color .15s;
+    }
+    .beam-input::placeholder { color:var(--muted); }
+    .beam-input:focus { border-color:var(--burg); }
+    .beam-textarea {
+      width:100%; background:rgba(255,255,255,.05); border:1px solid var(--border);
+      border-radius:8px; padding:11px 16px; color:var(--white);
+      font-family:var(--f); font-size:13px; outline:none; resize:vertical;
+      min-height:90px; transition:border-color .15s;
+    }
+    .beam-textarea::placeholder { color:var(--muted); }
+    .beam-textarea:focus { border-color:var(--burg); }
+    .btn-beam {
+      padding:12px 24px; background:var(--burg); color:#fff; border:none; border-radius:8px;
+      font-family:var(--f); font-size:13px; font-weight:700; cursor:pointer; transition:background .15s;
+    }
+    .btn-beam:hover { background:var(--burg-l); }
+    .beam-success { display:none; font-size:13px; color:#4ade80; padding:8px 0; }
+
+    /* Beam path animations */
+    @keyframes beamSlide { 0%{transform:translateX(-8%)} 100%{transform:translateX(8%)} }
+    .beam-path { animation:beamSlide 8s ease-in-out infinite alternate; }
+    .b1 { animation-duration:9s; animation-delay:0s; }
+    .b2 { animation-duration:11s; animation-delay:-2s; }
+    .b3 { animation-duration:8s; animation-delay:-4s; }
+    .b4 { animation-duration:12s; animation-delay:-1s; }
+    .b5 { animation-duration:10s; animation-delay:-3s; }
+    .b6 { animation-duration:7s; animation-delay:-5s; }
+
+    /* ── RESPONSIVE ───────────────────────────────────────────────── */
+    @media(max-width:900px) {
+      .dj-grid { grid-template-columns:repeat(2,1fr); }
+      .dj-card-wide { grid-column:span 2; }
+      .beams-inner { grid-template-columns:1fr; }
+    }
+    @media(max-width:640px) {
+      .dj-grid { grid-template-columns:1fr 1fr; gap:10px; }
+      .dj-card-wide { grid-column:span 2; }
+      .beams-section { padding:60px 16px; }
+    }
+    @media(max-width:440px) {
+      .dj-grid { grid-template-columns:1fr; }
+      .dj-card-wide { grid-column:span 1; }
+    }
 
     /* ════════════════════════════════════════════════ CTA */
     .cta-section { padding:0 28px 80px; }
@@ -569,6 +692,66 @@
       </div>
     </div>
     <div class="dj-grid" id="dj-grid"></div>
+  </section>
+
+  <!-- ─── Background Beams — Newsletter + DJ Apply ─────────────── -->
+  <section class="beams-section" id="community-section">
+    <!-- Animated SVG beams -->
+    <svg class="beams-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 600" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="bg1" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#983C43;stop-opacity:0"/>
+          <stop offset="50%" style="stop-color:#983C43;stop-opacity:.6"/>
+          <stop offset="100%" style="stop-color:#983C43;stop-opacity:0"/>
+        </linearGradient>
+        <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#b8474f;stop-opacity:0"/>
+          <stop offset="50%" style="stop-color:#b8474f;stop-opacity:.4"/>
+          <stop offset="100%" style="stop-color:#b8474f;stop-opacity:0"/>
+        </linearGradient>
+        <linearGradient id="bg3" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#393B53;stop-opacity:0"/>
+          <stop offset="50%" style="stop-color:#393B53;stop-opacity:.5"/>
+          <stop offset="100%" style="stop-color:#393B53;stop-opacity:0"/>
+        </linearGradient>
+      </defs>
+      <path d="M-100 600 L400 0 L420 0 L-80 600Z" fill="url(#bg1)" class="beam-path b1"/>
+      <path d="M100 600 L600 0 L620 0 L120 600Z" fill="url(#bg2)" class="beam-path b2"/>
+      <path d="M300 600 L800 0 L820 0 L320 600Z" fill="url(#bg1)" class="beam-path b3"/>
+      <path d="M600 600 L1100 0 L1120 0 L620 600Z" fill="url(#bg3)" class="beam-path b4"/>
+      <path d="M800 600 L1300 0 L1340 0 L840 600Z" fill="url(#bg2)" class="beam-path b5"/>
+      <path d="M1000 600 L1500 0 L1540 0 L1040 600Z" fill="url(#bg1)" class="beam-path b6"/>
+    </svg>
+
+    <div class="beams-inner">
+      <!-- Newsletter -->
+      <div class="beam-card">
+        <div class="beam-card-ey">Stay Connected</div>
+        <h3 class="beam-card-title">Newsletter<br>abonnieren</h3>
+        <p class="beam-card-sub">Neue Sets, Resident-Ankündigungen, Events und Behind-the-Scenes — direkt in dein Postfach.</p>
+        <form class="beam-form" id="form-newsletter" onsubmit="submitNewsletter(event)">
+          <input class="beam-input" type="text" placeholder="Dein Name" required>
+          <input class="beam-input" type="email" placeholder="Deine E-Mail" required>
+          <button type="submit" class="btn-beam">Abonnieren</button>
+          <div class="beam-success" id="nl-success">Danke! Du bist dabei. ✓</div>
+        </form>
+      </div>
+
+      <!-- DJ Apply -->
+      <div class="beam-card">
+        <div class="beam-card-ey">Join the Network</div>
+        <h3 class="beam-card-title">DJ Set<br>bewerben</h3>
+        <p class="beam-card-sub">Du willst bei Colognebeats spielen? Schick uns deine Demo, deinen Mix-Link und erzähl uns von deinem Sound.</p>
+        <form class="beam-form" id="form-djapply" onsubmit="submitDJApply(event)">
+          <input class="beam-input" type="text" placeholder="Dein DJ-Name" required>
+          <input class="beam-input" type="email" placeholder="Deine E-Mail" required>
+          <input class="beam-input" type="url" placeholder="SoundCloud / Mix-Link">
+          <textarea class="beam-textarea" placeholder="Kurze Bio & Genres (max. 200 Zeichen)" maxlength="200"></textarea>
+          <button type="submit" class="btn-beam">Bewerbung senden</button>
+          <div class="beam-success" id="dj-success">Danke! Wir melden uns bald. ✓</div>
+        </form>
+      </div>
+    </div>
   </section>
 
   <!-- ─── Community CTA ─────────────────────────────────────────── -->
@@ -850,16 +1033,30 @@ document.getElementById('btn-play-bp').addEventListener('click', togglePlay);
 });
 
 // ═══════════════════════════════════════════════════════ DJ GRID
+const EV_CHARS = '!@#$%^&*()_+-=[]{}|;:,./<>?ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+function randomChars(n) {
+  let s = '';
+  for (let i = 0; i < n; i++) s += EV_CHARS[Math.floor(Math.random() * EV_CHARS.length)];
+  return s;
+}
+
 function renderDJs(f='all') {
   const list = f==='all' ? DJS : DJS.filter(d=>d.genres.includes(f));
-  document.getElementById('dj-grid').innerHTML = list.map((d,i) => `
-    <div class="dj-card" style="animation-delay:${i*.06}s">
+  document.getElementById('dj-grid').innerHTML = list.map((d,i) => {
+    const wide = i === 0 || (i === 3); // first card and 4th card get wide treatment
+    return `
+    <div class="dj-card${wide ? ' dj-card-wide' : ''}" style="animation-delay:${i*.06}s">
       <div class="dj-photo">
         ${d.photo
           ? `<img src="${d.photo}" alt="${d.name}" loading="lazy">`
           : `<div class="dj-nophoto">${d.name[0]}</div>`}
       </div>
       ${d.onAir ? `<div class="on-air-badge"><div class="on-air-dot"></div>ON AIR</div>` : ''}
+      <!-- Evervault overlay -->
+      <div class="ev-overlay">
+        <div class="ev-gradient"></div>
+        <div class="ev-chars">${randomChars(600)}</div>
+      </div>
       <div class="dj-content">
         <div class="dj-tags">${d.tags.map(t=>`<span class="dj-tag">${t}</span>`).join('')}</div>
         <div class="dj-name">${d.name}</div>
@@ -878,7 +1075,31 @@ function renderDJs(f='all') {
           <a href="${d.booking}" class="btn-booking" onclick="event.stopPropagation()">Booking anfragen</a>
         </div>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
+  initEvervault();
+}
+
+function initEvervault() {
+  document.querySelectorAll('.dj-card').forEach(card => {
+    const gradient = card.querySelector('.ev-gradient');
+    const chars    = card.querySelector('.ev-chars');
+    let charTimer;
+    card.addEventListener('mousemove', e => {
+      const r = card.getBoundingClientRect();
+      const x = e.clientX - r.left;
+      const y = e.clientY - r.top;
+      const mask = `radial-gradient(220px at ${x}px ${y}px, white, transparent)`;
+      if (gradient) { gradient.style.webkitMaskImage = mask; gradient.style.maskImage = mask; }
+      if (chars)    { chars.style.webkitMaskImage    = mask; chars.style.maskImage    = mask; }
+    });
+    card.addEventListener('mouseenter', () => {
+      charTimer = setInterval(() => {
+        if (chars) chars.textContent = randomChars(600);
+      }, 80);
+    });
+    card.addEventListener('mouseleave', () => clearInterval(charTimer));
+  });
 }
 
 function filterDJs(f, btn) {
@@ -1020,6 +1241,22 @@ function startBgCanvas(_active) {
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     requestAnimationFrame(render);
   })();
+}
+
+// ═══════════════════════════════════════════════════ FORMS
+function submitNewsletter(e) {
+  e.preventDefault();
+  const success = document.getElementById('nl-success');
+  success.style.display = 'block';
+  e.target.querySelector('.btn-beam').style.display = 'none';
+  // TODO: wire up to your email service (Mailchimp, ConvertKit, etc.)
+}
+function submitDJApply(e) {
+  e.preventDefault();
+  const success = document.getElementById('dj-success');
+  success.style.display = 'block';
+  e.target.querySelector('.btn-beam').style.display = 'none';
+  // TODO: send to booking@colognebeats.com via Formspree or similar
 }
 
 // ═══════════════════════════════════════════════════════ INIT

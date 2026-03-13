@@ -140,24 +140,106 @@
     .np-live-dot { width:4px; height:4px; border-radius:50%; background:#ff4444; animation:blink 1.5s ease-in-out infinite; }
 
     /* Big play button */
+    /* ── SPIDER-VERSE GLITCH PLAY BUTTON ───────────────────────── */
+    .play-hero-wrap {
+      position:relative; margin:0 auto 28px;
+      width:80px; height:80px;
+    }
     .btn-play-hero {
+      position:relative;
       width:80px; height:80px; border-radius:50%;
       background:var(--burg); border:none; color:#fff;
       display:flex; align-items:center; justify-content:center;
-      cursor:pointer; margin:0 auto 28px;
-      transition:background .15s, transform .15s, box-shadow .15s;
-      box-shadow:0 0 0 0 rgba(152,60,67,0);
+      cursor:pointer; z-index:1;
+      transition:transform .15s ease-out;
+      overflow:hidden;
     }
-    .btn-play-hero:hover { background:var(--burg-l); transform:scale(1.06); }
-    .btn-play-hero.playing {
+    .btn-play-hero svg { width:30px; height:30px; position:relative; z-index:5; }
+
+    /* Glitch layers */
+    .btn-play-hero .sv-layer {
+      position:absolute; inset:0; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      opacity:0; transition:opacity .15s;
+      pointer-events:none;
+    }
+    .btn-play-hero .sv-layer svg { width:30px; height:30px; }
+    .sv-layer-1 { background:var(--burg); color:cyan; }
+    .sv-layer-2 { background:var(--burg); color:#e040fb; }
+
+    /* Noise texture */
+    .btn-play-hero .sv-noise {
+      position:absolute; inset:-50%; width:200%; height:200%;
+      border-radius:50%; pointer-events:none; opacity:0;
+      background:repeating-radial-gradient(circle at 50% 50%, transparent 0, rgba(0,0,0,.15) 1px, transparent 2px);
+      transition:opacity .3s;
+    }
+
+    /* Scanning slice */
+    .btn-play-hero .sv-slice {
+      position:absolute; left:-10%; width:120%; height:3px;
+      background:rgba(255,255,255,.7); opacity:0;
+      pointer-events:none; border-radius:2px;
+      animation:svSlice 3s linear infinite;
+    }
+
+    /* Hover state */
+    .play-hero-wrap:hover .btn-play-hero {
+      animation:svButtonGlitch .3s steps(2) infinite;
+      box-shadow:0 0 20px rgba(255,255,255,.35),
+                 0 0 32px rgba(0,255,255,.45),
+                 0 0 44px rgba(224,64,251,.45);
+    }
+    .play-hero-wrap:hover .sv-layer-1 { opacity:1; animation:svLayer1 .4s steps(2) infinite; }
+    .play-hero-wrap:hover .sv-layer-2 { opacity:1; animation:svLayer2 .4s steps(2) infinite; }
+    .play-hero-wrap:hover .sv-noise   { opacity:1; animation:svNoise .2s steps(2) infinite; }
+
+    /* Playing pulse (when no hover) */
+    .btn-play-hero.playing:not(:hover) {
       box-shadow:0 0 0 12px rgba(152,60,67,.12), 0 0 0 24px rgba(152,60,67,.05);
-      animation:hero-pulse 2s ease-in-out infinite;
+      animation:heroPulse 2s ease-in-out infinite;
     }
-    @keyframes hero-pulse {
+    @keyframes heroPulse {
       0%,100% { box-shadow:0 0 0 12px rgba(152,60,67,.12), 0 0 0 28px rgba(152,60,67,.05); }
       50%      { box-shadow:0 0 0 18px rgba(152,60,67,.08), 0 0 0 36px rgba(152,60,67,.03); }
     }
-    .btn-play-hero svg { width:30px; height:30px; }
+
+    @keyframes svButtonGlitch {
+      0%   { transform:translate(0)          scale(1.1); }
+      25%  { transform:translate(-6px, 3px)  scale(1.13) skew(-4deg); }
+      50%  { transform:translate(6px, -3px)  scale(1.1)  skew(4deg); }
+      75%  { transform:translate(-8px, -3px) scale(1.06) skew(-2deg); }
+      100% { transform:translate(0)          scale(1.1); }
+    }
+    @keyframes svLayer1 {
+      0%   { transform:translate(-12px,-6px) scale(1.1)  skew(-8deg); clip-path:polygon(0 20%,100% 20%,100% 55%,0 55%); }
+      25%  { transform:translate(12px, 6px)  scale(1.2)  skew(8deg);  clip-path:polygon(0 30%,100% 30%,100% 65%,0 65%); }
+      50%  { transform:translate(-9px, 3px)  scale(.9)   skew(-4deg); clip-path:polygon(0 10%,100% 10%,100% 45%,0 45%); }
+      75%  { transform:translate(9px, -3px)  scale(1.25) skew(4deg);  clip-path:polygon(0 40%,100% 40%,100% 75%,0 75%); }
+      100% { transform:translate(-12px,-6px) scale(1.1)  skew(-8deg); clip-path:polygon(0 20%,100% 20%,100% 55%,0 55%); }
+    }
+    @keyframes svLayer2 {
+      0%   { transform:translate(12px, 6px)  scale(1.1)  skew(8deg);  clip-path:polygon(0 50%,100% 50%,100% 85%,0 85%); }
+      25%  { transform:translate(-12px,-6px) scale(1.2)  skew(-8deg); clip-path:polygon(0 60%,100% 60%,100% 90%,0 90%); }
+      50%  { transform:translate(9px, -3px)  scale(.9)   skew(4deg);  clip-path:polygon(0 40%,100% 40%,100% 70%,0 70%); }
+      75%  { transform:translate(-9px, 3px)  scale(1.25) skew(-4deg); clip-path:polygon(0 70%,100% 70%,100% 100%,0 100%); }
+      100% { transform:translate(12px, 6px)  scale(1.1)  skew(8deg);  clip-path:polygon(0 50%,100% 50%,100% 85%,0 85%); }
+    }
+    @keyframes svNoise {
+      0%   { transform:translate(0,0); }
+      20%  { transform:translate(-4%,-4%); }
+      40%  { transform:translate(8%,4%); }
+      60%  { transform:translate(-4%,8%); }
+      80%  { transform:translate(8%,-4%); }
+      100% { transform:translate(0,0); }
+    }
+    @keyframes svSlice {
+      0%   { top:-10%; opacity:0; }
+      1%   { opacity:.6; }
+      3%   { opacity:0; }
+      50%  { top:110%; }
+      100% { top:110%; }
+    }
 
     /* Progress */
     .hero-progress { width:100%; max-width:480px; margin:0 auto 16px; }
@@ -622,10 +704,24 @@
         </div>
       </div>
 
-      <!-- Play button -->
-      <button class="btn-play-hero" id="btn-play-hero" aria-label="Play/Pause">
-        <svg id="hero-play-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-      </button>
+      <!-- Play button (Spider-Verse glitch) -->
+      <div class="play-hero-wrap">
+        <button class="btn-play-hero" id="btn-play-hero" aria-label="Play/Pause">
+          <!-- Main icon -->
+          <svg id="hero-play-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          <!-- Glitch layer 1 — cyan -->
+          <div class="sv-layer sv-layer-1">
+            <svg id="sv-icon-1" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+          <!-- Glitch layer 2 — magenta -->
+          <div class="sv-layer sv-layer-2">
+            <svg id="sv-icon-2" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+          <!-- Noise + slice -->
+          <div class="sv-noise"></div>
+          <div class="sv-slice"></div>
+        </button>
+      </div>
 
       <!-- Progress -->
       <div class="hero-progress">
@@ -998,6 +1094,11 @@ function setPlayUI(isPlaying) {
   const icon = isPlaying ? pauseIcon : playIcon;
   document.getElementById('hero-play-icon').innerHTML = icon;
   document.getElementById('bp-play-icon').innerHTML   = icon;
+  // Keep glitch layer icons in sync
+  const sv1 = document.getElementById('sv-icon-1');
+  const sv2 = document.getElementById('sv-icon-2');
+  if (sv1) sv1.innerHTML = icon;
+  if (sv2) sv2.innerHTML = icon;
   document.getElementById('btn-play-hero').classList.toggle('playing', isPlaying);
   document.getElementById('hero-glow').style.opacity = isPlaying ? '1' : '0.5';
   startBgCanvas(isPlaying);

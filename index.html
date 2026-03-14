@@ -604,13 +604,13 @@
     .cta-section { padding:0 28px 80px; }
     .cta-inner {
       max-width:1200px; margin:0 auto;
-      background:linear-gradient(135deg, var(--purp) 0%, var(--card) 100%);
-      border:1px solid var(--border); border-radius:14px; padding:48px;
+      background:linear-gradient(135deg, #1e1c2e 0%, #13111a 100%);
+      border:1px solid rgba(255,255,255,.12); border-radius:14px; padding:48px;
       display:flex; align-items:center; justify-content:space-between; gap:32px;
     }
-    .cta-ey { font-size:10px; font-weight:700; letter-spacing:.22em; text-transform:uppercase; color:var(--burg); margin-bottom:10px; }
-    .cta-title { font-size:28px; font-weight:900; letter-spacing:-.02em; line-height:1.15; }
-    .cta-sub { font-size:14px; color:var(--muted); margin-top:10px; max-width:400px; line-height:1.65; }
+    .cta-ey { font-size:10px; font-weight:700; letter-spacing:.22em; text-transform:uppercase; color:var(--burg-l); margin-bottom:10px; }
+    .cta-title { font-size:28px; font-weight:900; letter-spacing:-.02em; line-height:1.15; color:var(--white); }
+    .cta-sub { font-size:14px; color:rgba(242,237,230,.65); margin-top:10px; max-width:400px; line-height:1.65; }
     .cta-btns { display:flex; gap:12px; flex-shrink:0; }
     .btn-pri-wrap { position:relative; display:inline-block; flex-shrink:0; }
     .btn-pri {
@@ -653,8 +653,8 @@
       75%  { transform:translate(-6px,-2px) scale(1.02) skew(-2deg); }
       100% { transform:translate(0)         scale(1.04); }
     }
-    .btn-sec { padding:13px 28px; background:none; color:var(--white); border:1px solid var(--border); border-radius:8px; font-family:var(--f); font-size:14px; font-weight:700; cursor:pointer; text-decoration:none; transition:border-color .15s; white-space:nowrap; }
-    .btn-sec:hover { border-color:rgba(255,255,255,.22); }
+    .btn-sec { padding:13px 28px; background:rgba(255,255,255,.07); color:var(--white); border:1px solid rgba(255,255,255,.2); border-radius:8px; font-family:var(--f); font-size:14px; font-weight:700; cursor:pointer; text-decoration:none; transition:background .15s, border-color .15s; white-space:nowrap; }
+    .btn-sec:hover { background:rgba(255,255,255,.12); border-color:rgba(255,255,255,.35); }
 
     /* ════════════════════════════════════════════════ FOOTER */
     .footer { border-top:1px solid var(--border); padding:22px 28px; display:flex; align-items:center; justify-content:space-between; }

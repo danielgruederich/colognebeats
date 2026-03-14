@@ -335,6 +335,51 @@
     @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(5px)} }
 
     /* ════════════════════════════════════════════════ DJ SECTION (in home) */
+    /* ── SCHEDULE SECTION ───────────────────────────────────────── */
+    .schedule-section {
+      padding:60px 28px; max-width:1200px; margin:0 auto;
+    }
+    .schedule-header {
+      display:flex; align-items:flex-end; justify-content:space-between;
+      margin-bottom:24px;
+    }
+    .schedule-list { display:flex; flex-direction:column; gap:2px; }
+    .sched-item {
+      display:grid; grid-template-columns:120px 1fr auto;
+      align-items:center; gap:16px;
+      padding:14px 20px; border-radius:10px;
+      background:var(--card); border:1px solid var(--border);
+      transition:border-color .2s;
+    }
+    .sched-item:hover { border-color:rgba(152,60,67,.35); }
+    .sched-item.is-now {
+      background:rgba(152,60,67,.08);
+      border-color:rgba(152,60,67,.35);
+    }
+    .sched-time { font-size:12px; font-weight:600; color:var(--muted); font-variant-numeric:tabular-nums; }
+    .sched-item.is-now .sched-time { color:var(--burg-l); }
+    .sched-name { font-size:14px; font-weight:600; }
+    .sched-now-badge {
+      display:inline-flex; align-items:center; gap:5px;
+      padding:3px 10px; border-radius:20px;
+      background:rgba(255,50,50,.1); border:1px solid rgba(255,50,50,.25);
+      font-size:9px; font-weight:700; letter-spacing:.1em; color:#ff5555;
+    }
+    .sched-now-dot { width:5px; height:5px; border-radius:50%; background:#ff5555; animation:blink 1.5s ease-in-out infinite; }
+    .sched-up-next {
+      display:inline-flex; align-items:center; gap:5px;
+      padding:3px 10px; border-radius:20px;
+      background:rgba(255,255,255,.05); border:1px solid var(--border);
+      font-size:9px; font-weight:700; letter-spacing:.1em; color:var(--muted);
+    }
+
+    /* ── UP NEXT IN PLAYER ──────────────────────────────────────── */
+    .bp-upnext {
+      font-size:10px; color:var(--muted); white-space:nowrap;
+      display:flex; align-items:center; gap:5px;
+    }
+    .bp-upnext strong { color:rgba(242,237,230,.6); font-weight:500; }
+
     .dj-section {
       max-width:1200px; margin:0 auto; padding:80px 28px;
     }
@@ -827,6 +872,19 @@
     </div>
   </section>
 
+  <!-- ─── Schedule ───────────────────────────────────────────────── -->
+  <section class="schedule-section">
+    <div class="schedule-header">
+      <div>
+        <div class="sec-eyebrow">Sendeplan</div>
+        <h2 class="sec-title">Programm</h2>
+      </div>
+    </div>
+    <div class="schedule-list" id="schedule-list">
+      <div style="color:var(--muted);font-size:13px;padding:12px 0">Lädt…</div>
+    </div>
+  </section>
+
   <!-- ─── DJ Section ─────────────────────────────────────────────── -->
   <section class="dj-section" id="dj-anchor">
     <div class="dj-section-header">
@@ -963,6 +1021,10 @@
   </div>
 
   <div class="bp-right">
+    <div class="bp-upnext" id="bp-upnext" style="display:none">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zm2-8.14L11.03 12 8 14.14V9.86zM16 6h2v12h-2z"/></svg>
+      Up next: <strong id="bp-upnext-name">—</strong>
+    </div>
     <div class="bp-listeners"><strong id="bp-listeners">—</strong> Hörer</div>
     <div class="bp-vol">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
@@ -1413,6 +1475,55 @@ function startBgCanvas(_active) {
   })();
 }
 
+// ═══════════════════════════════════════════ SCHEDULE + UP NEXT
+const API_KEY = '0740d90da9a484ff:5ddea4283685afa7b364080236a57e73';
+
+function fmtSchedTime(iso) {
+  const d = new Date(iso);
+  return d.toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit', timeZone:'Europe/Berlin'});
+}
+
+async function fetchSchedule() {
+  try {
+    const res  = await fetch(`${API}/station/${SID}/schedule`, {
+      headers: { 'X-API-Key': API_KEY }
+    });
+    const data = await res.json();
+    if (!data?.length) return;
+
+    const el = document.getElementById('schedule-list');
+    const now = Date.now() / 1000;
+
+    // Show next 8 entries
+    const items = data.filter(e => e.end_timestamp > now).slice(0, 8);
+
+    el.innerHTML = items.map((e, i) => {
+      const isNow  = e.is_now;
+      const isNext = !isNow && i === items.findIndex(x => !x.is_now);
+      const start  = fmtSchedTime(e.start);
+      const end    = fmtSchedTime(e.end);
+      return `
+      <div class="sched-item${isNow ? ' is-now' : ''}">
+        <div class="sched-time">${start} – ${end}</div>
+        <div class="sched-name">${e.name}</div>
+        <div>
+          ${isNow  ? `<div class="sched-now-badge"><div class="sched-now-dot"></div>LIVE NOW</div>` : ''}
+          ${isNext ? `<div class="sched-up-next">UP NEXT</div>` : ''}
+        </div>
+      </div>`;
+    }).join('');
+
+    // Update "Up Next" in bottom player
+    const next = items.find(e => !e.is_now);
+    if (next) {
+      document.getElementById('bp-upnext-name').textContent = next.name;
+      document.getElementById('bp-upnext').style.display = 'flex';
+    }
+  } catch(e) {
+    console.warn('Schedule fetch failed', e);
+  }
+}
+
 // ═══════════════════════════════════════════════════ FORMS
 function submitNewsletter(e) {
   e.preventDefault();
@@ -1432,7 +1543,9 @@ function submitDJApply(e) {
 // ═══════════════════════════════════════════════════════ INIT
 renderDJs();
 fetchNP();
+fetchSchedule();
 setInterval(fetchNP, 15000);
+setInterval(fetchSchedule, 60000);
 startBgCanvas(false);
 </script>
 </body>

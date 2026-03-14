@@ -64,9 +64,9 @@
     .nav-cta {
       padding:8px 18px; background:var(--burg); color:#fff; border:none; border-radius:6px;
       font-family:var(--f); font-size:13px; font-weight:600; cursor:pointer;
-      text-decoration:none; transition:background .15s; white-space:nowrap;
+      text-decoration:none; white-space:nowrap;
     }
-    .nav-cta:hover { background:var(--burg-l); }
+    .nav-cta .sv-layer { font-size:13px; font-weight:600; border-radius:6px; }
     .nav-burger { display:none; background:none; border:none; cursor:pointer; color:var(--white); }
 
     /* ═══════════════════════════════════════════════════ VIEWS */
@@ -563,8 +563,47 @@
     .cta-title { font-size:28px; font-weight:900; letter-spacing:-.02em; line-height:1.15; }
     .cta-sub { font-size:14px; color:var(--muted); margin-top:10px; max-width:400px; line-height:1.65; }
     .cta-btns { display:flex; gap:12px; flex-shrink:0; }
-    .btn-pri { padding:13px 28px; background:var(--burg); color:#fff; border:none; border-radius:8px; font-family:var(--f); font-size:14px; font-weight:700; cursor:pointer; text-decoration:none; transition:background .15s; white-space:nowrap; }
-    .btn-pri:hover { background:var(--burg-l); }
+    .btn-pri-wrap { position:relative; display:inline-block; flex-shrink:0; }
+    .btn-pri {
+      position:relative; display:inline-flex; align-items:center; justify-content:center;
+      padding:13px 28px; background:var(--burg); color:#fff; border:none; border-radius:8px;
+      font-family:var(--f); font-size:14px; font-weight:700; cursor:pointer;
+      text-decoration:none; white-space:nowrap; overflow:hidden;
+      transition:transform .15s ease-out; z-index:1;
+    }
+    .btn-pri .sv-layer {
+      position:absolute; inset:0; border-radius:8px;
+      display:flex; align-items:center; justify-content:center;
+      opacity:0; pointer-events:none; font-weight:700; font-size:14px;
+      font-family:var(--f); white-space:nowrap;
+    }
+    .btn-pri .sv-layer-1 { background:var(--burg); color:cyan; }
+    .btn-pri .sv-layer-2 { background:var(--burg); color:#e040fb; }
+    .btn-pri .sv-noise {
+      position:absolute; inset:-50%; width:200%; height:200%;
+      pointer-events:none; opacity:0;
+      background:repeating-radial-gradient(circle at 50% 50%, transparent 0, rgba(0,0,0,.15) 1px, transparent 2px);
+      transition:opacity .3s;
+    }
+    .btn-pri .sv-slice {
+      position:absolute; left:-10%; width:120%; height:2px;
+      background:rgba(255,255,255,.7); opacity:0; pointer-events:none;
+      animation:svSlice 3s linear infinite;
+    }
+    .btn-pri-wrap:hover .btn-pri {
+      animation:svBtnGlitch .3s steps(2) infinite;
+      box-shadow:0 0 16px rgba(255,255,255,.3), 0 0 24px rgba(0,255,255,.4), 0 0 32px rgba(224,64,251,.4);
+    }
+    .btn-pri-wrap:hover .sv-layer-1 { opacity:1; animation:svLayer1 .4s steps(2) infinite; }
+    .btn-pri-wrap:hover .sv-layer-2 { opacity:1; animation:svLayer2 .4s steps(2) infinite; }
+    .btn-pri-wrap:hover .sv-noise   { opacity:1; animation:svNoise .2s steps(2) infinite; }
+    @keyframes svBtnGlitch {
+      0%   { transform:translate(0)         scale(1.04); }
+      25%  { transform:translate(-5px,2px)  scale(1.06) skew(-3deg); }
+      50%  { transform:translate(5px,-2px)  scale(1.04) skew(3deg); }
+      75%  { transform:translate(-6px,-2px) scale(1.02) skew(-2deg); }
+      100% { transform:translate(0)         scale(1.04); }
+    }
     .btn-sec { padding:13px 28px; background:none; color:var(--white); border:1px solid var(--border); border-radius:8px; font-family:var(--f); font-size:14px; font-weight:700; cursor:pointer; text-decoration:none; transition:border-color .15s; white-space:nowrap; }
     .btn-sec:hover { border-color:rgba(255,255,255,.22); }
 
@@ -669,7 +708,15 @@
     <li><button onclick="goDJs()" id="nav-djs">DJs</button></li>
     <li><button onclick="window.open('https://community.colognebeats.com','_blank')">Community</button></li>
   </ul>
-  <a href="https://community.colognebeats.com" target="_blank" class="nav-cta">Community beitreten</a>
+  <div class="btn-pri-wrap">
+    <a href="https://community.colognebeats.com" target="_blank" class="btn-pri nav-cta-glitch">
+      Community beitreten
+      <div class="sv-layer sv-layer-1">Community beitreten</div>
+      <div class="sv-layer sv-layer-2">Community beitreten</div>
+      <div class="sv-noise"></div>
+      <div class="sv-slice"></div>
+    </a>
+  </div>
   <button class="nav-burger" onclick="toggleMobile()" aria-label="Menu">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
   </button>
@@ -859,7 +906,15 @@
         <p class="cta-sub">Vernetze dich mit DJs, Produzentinnen und Musikliebhabern aus Köln und der ganzen Welt.</p>
       </div>
       <div class="cta-btns">
-        <a href="https://community.colognebeats.com" target="_blank" class="btn-pri">Community beitreten</a>
+        <div class="btn-pri-wrap">
+          <a href="https://community.colognebeats.com" target="_blank" class="btn-pri">
+            Community beitreten
+            <div class="sv-layer sv-layer-1">Community beitreten</div>
+            <div class="sv-layer sv-layer-2">Community beitreten</div>
+            <div class="sv-noise"></div>
+            <div class="sv-slice"></div>
+          </a>
+        </div>
         <a href="https://www.colognebeats.com/djs-network" class="btn-sec">DJ Netzwerk (alt)</a>
       </div>
     </div>

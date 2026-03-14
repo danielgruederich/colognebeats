@@ -716,6 +716,7 @@
     @media(max-width:640px) {
       .nav-links { display:none; }
       .nav-burger { display:flex; }
+      .nav > .btn-pri-wrap { display:none; }
       .dj-grid { grid-template-columns:repeat(2,1fr); gap:10px; }
       .dj-section, .cta-section { padding-left:16px; padding-right:16px; }
       .cta-inner { padding:28px; }
@@ -737,12 +738,12 @@
     }
     .mobile-menu.open { display:flex; }
     .mobile-menu button {
-      padding:12px 0; background:none; border:none; border-bottom:1px solid var(--border);
-      font-family:var(--f); font-size:15px; font-weight:600; color:var(--muted);
+      padding:14px 0; background:none; border:none; border-bottom:1px solid var(--border);
+      font-family:var(--f); font-size:17px; font-weight:600; color:var(--white);
       text-align:left; cursor:pointer; transition:color .15s;
     }
     .mobile-menu button:last-child { border-bottom:none; }
-    .mobile-menu button:hover { color:var(--white); }
+    .mobile-menu button:hover { color:var(--burg-l); }
   </style>
 </head>
 <body>
